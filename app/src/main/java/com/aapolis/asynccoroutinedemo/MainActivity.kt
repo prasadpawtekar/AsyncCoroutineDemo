@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.aapolis.asynccoroutinedemo.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import retrofit2.Response
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,12 +22,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    val eh = CoroutineExceptionHandler{
+        context, t ->
+        // code to handle exception
+
+    }
+
     private fun showBalance() {
         val axisAcno = binding.etAxisAcno.text.toString()
         val hdfcAcno = binding.etHdfcAcno.text.toString()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-
+        lifecycleScope.launch(Dispatchers.IO+eh) {
             val axisAsync: Deferred<Int> = lifecycleScope.async {
                 val response: Response<BankBalance> = ApiService.getInstance().axisBalance(axisAcno)
                 var result = 0
